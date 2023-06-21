@@ -1,0 +1,52 @@
+{
+    "settings": {
+        "font": "assets/fonts/out_game.ttf"
+    },
+
+
+    "intro": {
+        "rects": {
+
+        },
+        "texts": {
+            "story": [
+                "one day, a cube named \"jumpy\" wanted to step outside his home and touch grass",
+                18,
+                [100,100]
+            ]
+        },
+        "buttons": {
+            "start": [
+                "click to start",
+                21,
+                [140, 40],
+                [320,200]
+            ]
+        }
+    },
+
+
+    "level finish": {
+        "rects": {
+            "message_background": [
+                [300, 90],
+                [230, 165]
+            ]
+        },
+        "texts": {
+            "message": [
+                "nice balls!, you win:)",
+                28,
+                [260,200]
+            ]
+        },
+        "buttons": {
+            "next_level": [
+                "click to progress",
+                21,
+                [170, 40],
+                [300,350]
+            ]
+        }
+    }
+}
