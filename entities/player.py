@@ -21,10 +21,13 @@ class Player(Entity):
         self.speed_move = speed_move
         self.speed_jump = -speed_jump
 
-        self.input_config = json.load(open("config/key_bind.json"))
+        self.config_key = json.load(open("config/key_bind.json"))
+        self.config_gp = json.load(open("config/gamepad_bind.json"))
         self.sprite = image.load(path.join(self.directory, "sprites", "player.png"))
         self.sprite = transform.scale(self.sprite, size)
         self.eyes = Eyes(self, (5, 5), Colors.blue)
+
+        self.controller = None
 
         self.is_on_wall_left = False
         self.is_on_wall_right = False
@@ -37,6 +40,13 @@ class Player(Entity):
     def move(self, x:int, y:int):
         self.pos_x += x
         self.pos_y += y
+    
+    def __connect_controller(self):
+        if self.controller is None:
+            try:
+                self.controller = pygame.joystick.Joystick(0)
+            except:
+                pass
     
     def __get_value_of_key(self, key_name):
         return getattr(pygame, "K_" + key_name)
@@ -75,11 +85,15 @@ class Player(Entity):
 
 
     def process_event(self, ev:pygame.event.EventType):
-        key_jump = self.__get_value_of_key(self.input_config["jump"])
+        key_jump = self.__get_value_of_key(self.config_key["jump"])
+        btn_jump = self.config_gp["buttons"]["jump"]
         
 
         if ev.type == pygame.KEYDOWN:
             if ev.key == key_jump:
+                self.__jump()
+        elif ev.type == pygame.JOYBUTTONDOWN:
+            if ev.button == btn_jump:
                 self.__jump()
 
     
@@ -93,8 +107,10 @@ class Player(Entity):
             self.update_force_x()        
 
 
+        self.__connect_controller()
         self.__update_collision(*[level_object.get_rect() for level_object in level_objects])
         self.__update_input_keyboard()
+        self.__update_input_controller()
         self.__pos_fix()
         
     def __update_collision(self, *targets:Rect):
@@ -129,8 +145,8 @@ class Player(Entity):
         self.is_on_ground = is_on_ground
     
     def __update_input_keyboard(self):
-        key_left = self.__get_value_of_key(self.input_config["left"])
-        key_right = self.__get_value_of_key(self.input_config["right"])
+        key_left = self.__get_value_of_key(self.config_key["left"])
+        key_right = self.__get_value_of_key(self.config_key["right"])
 
         keys_pressed = key.get_pressed()
 
@@ -140,6 +156,19 @@ class Player(Entity):
         
         if keys_pressed[key_right] and not self.is_on_wall_right:
             self.add_force(self.speed_move, 0)
+    
+    def __update_input_controller(self):
+        if not self.controller is None:
+            axis_move = self.controller.get_axis(self.config_gp["axises"]["moving"])
+            dpad_move = self.controller.get_hat(0)[0]
+
+            deadzone = self.config_gp["stickDZ"]
+
+
+            if abs(axis_move) > deadzone:
+                self.add_force(axis_move*self.speed_move, 0)
+            else:
+                self.add_force(dpad_move*self.speed_move, 0)
                 
     
     def render(self, surface:Surface):
