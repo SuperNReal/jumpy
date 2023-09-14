@@ -215,9 +215,9 @@ class Game():
     def __render_game_controls(self):
         self.window.blit(self.dis_arrows, self.dis_arrows_pos)
 
-        dis_left = Text("assets/fonts/in_game.ttf", self.main_player.input_config["left"], 23, (self.dis_arrows_pos[0] - 50, self.dis_arrows_pos[1] + 110))
-        dis_right = Text("assets/fonts/in_game.ttf", self.main_player.input_config["right"], 23, (self.dis_arrows_pos[0] + 230, self.dis_arrows_pos[1] + 110))
-        dis_jump = Text("assets/fonts/in_game.ttf", self.main_player.input_config["jump"], 23, (self.dis_arrows_pos[0] + 83, self.dis_arrows_pos[1] - 15))
+        dis_left = Text("assets/fonts/in_game.ttf", self.main_player.config_key["left"], 23, (self.dis_arrows_pos[0] - 50, self.dis_arrows_pos[1] + 110))
+        dis_right = Text("assets/fonts/in_game.ttf", self.main_player.config_key["right"], 23, (self.dis_arrows_pos[0] + 230, self.dis_arrows_pos[1] + 110))
+        dis_jump = Text("assets/fonts/in_game.ttf", self.main_player.config_key["jump"], 23, (self.dis_arrows_pos[0] + 83, self.dis_arrows_pos[1] - 15))
         
         dis_left.render(self.window)
         dis_right.render(self.window)
